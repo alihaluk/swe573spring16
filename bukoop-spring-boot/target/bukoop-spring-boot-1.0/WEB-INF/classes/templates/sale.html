@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="width=device-width"/>
+    <!-- Angular Material style sheet -->
+    <link rel="stylesheet"
+          href="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0-rc2/angular-material.min.css">
+    <link rel="styleSheet" type="text/css"
+          href="./bower_components/angular-ui-grid/ui-grid.min.css"/>
+    <link href='./css/css/sale.css' rel="stylesheet" type="text/css"/>
+</head>
+
+<body ng-app="myApp" ng-cloak ng-controller="ProductController as products" layout="column">
+
+<div class="product-filter" layout>
+    <h1 flex class="md-headline">BUKOOP POS</h1>
+    <div class="sort md-caption" layout>
+        <div class="collection-filter" layout="column">
+            <input type="text" ng-model="search" ng-change="searchProduct()"/>
+            <h1>{{result}}</h1>
+        </div>
+        <div class="collection-sort" layout="column">
+            <md-input-container>
+                <label>Filter by:</label>
+                <md-select ng-model="products.filterBy">
+                    <md-option value="{{filter}}" ng-repeat="filter in products.availableFilters">{{filter}}</md-option>
+                </md-select>
+            </md-input-container>
+        </div>
+        <div class="collection-sort" layout="column">
+            <md-input-container>
+                <label>Sort by:</label>
+                <md-select ng-model="products.sortedBy">
+                    <md-option value="{{sort}}" ng-repeat="sort in products.availableSorts">{{sort}}</md-option>
+                </md-select>
+            </md-input-container>
+        </div>
+    </div>
+</div>
+
+
+<section class="catalog" layout="row" layout-wrap layout-align="left">
+    <md-grid-list ng-repeat="it in products.catalog"
+                  md-cols="4"
+                  md-row-height="2:2"
+                  md-gutter="8px">
+        <md-grid-tile-header>
+            <span class="md-title">{{it.title}} </span>
+        </md-grid-tile-header>
+        <img src="{{it.imageURL}}" style="height: 150px; width: 150px" ng-click="setActiveItem(it)">
+        <md-grid-tile-footer layout="row">
+            <span class="md-subhead">{{it.price}} TL</span>
+        </md-grid-tile-footer>
+    </md-grid-list>
+</section>
+
+<section class="rightSide">
+    <h3>{{selectedItem.title}}</h3>
+    <h4 ng-show="selectedItem">{{selectedItem.price}} TL</h4>
+
+    <md-input-container ng-show="selectedItem">
+        <label>Unit:</label>
+        <md-select ng-model="products.unitBy">
+            <md-option value="{{unit}}" ng-repeat="unit in products.productUnits">{{unit}}</md-option>
+        </md-select>
+    </md-input-container>
+
+    <md-input-container ng-show="selectedItem">
+        <label>Amount:</label>
+        <input type="number" ng-model="amount"/>
+    </md-input-container>
+
+    <md-button class="md-raised md-primary" ng-show="selectedItem" ng-click="addToCart()">Add to cart</md-button>
+
+    <div ui-grid="myGrid" ui-grid-selection class="grid"></div>
+
+    <md-button class="md-raised md-warn" ng-show="myGridApi.selection.getSelectedRows().length" ng-click="deleteFromCart()">Delete</md-button>
+
+    <md-button class="md-raised md-primary" ng-show="myGrid.data.length" ng-click="checkOut()">Checkout</md-button>
+</section>
+
+<!-- Angular Material requires Angular.js Libraries -->
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular-animate.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular-aria.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular-messages.min.js"></script>
+
+<!-- Angular Material Library -->
+<script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0-rc2/angular-material.min.js"></script>
+
+<script src="./bower_components/angular-ui-grid/ui-grid.min.js"></script>
+
+<!-- Your application bootstrap  -->
+<script type="text/javascript" src="./js/sale.js">
+    /**
+     * You must include the dependency on 'ngMaterial'
+     */
+    angular.module('myApp', ['ngMaterial', 'ui.grid', 'ui.grid.selection']);
+</script>
+
+</body>
+
+</html>
+
+<!--
+Copyright 2016 Google Inc. All Rights Reserved.
+Use of this source code is governed by an MIT-style license that can be in foundin the LICENSE file at http://material.angularjs.org/license.
+-->
